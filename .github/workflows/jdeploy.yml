@@ -32,6 +32,19 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      - name: Update package.json with JAR path
+        run: |
+          JAR_FILE=$(ls target/*-fat.jar | head -1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: No fat JAR found in target/"
+            exit 1
+          fi
+          echo "Found JAR: $JAR_FILE"
+          # Update the jar path in package.json
+          sed -i "s|\"jar\": \"[^\"]*\"|\"jar\": \"$JAR_FILE\"|" package.json
+          echo "Updated package.json:"
+          grep '"jar"' package.json
+
       - name: Build App Installer Bundles
         uses: shannah/jdeploy@master
         with:
