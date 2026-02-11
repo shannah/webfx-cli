@@ -35,6 +35,17 @@ public final class Bump extends CommonSubcommand {
 
         @Override
         public void run() {
+            // Check if running via jDeploy - if so, direct user to use "webfx update" instead
+            String jdeployMode = System.getProperty("jdeploy.mode");
+            if ("command".equals(jdeployMode)) {
+                String version = System.getProperty("jdeploy.version", "unknown");
+                Logger.log("WebFX CLI version: " + version);
+                Logger.log("");
+                Logger.log("This command is for developers who built WebFX CLI from source.");
+                Logger.log("To update your jDeploy-installed CLI, use: webfx update");
+                return;
+            }
+
             if (cliRepositoryPath != null) {
                 if (branch == null)
                     gitPullAndBuild(true);
@@ -145,7 +156,7 @@ public final class Bump extends CommonSubcommand {
     }
 
     private static Path walkUpToCliRepositoryPath(Path insidePath) {
-        while (insidePath != null) {
+        while (insidePath != null && insidePath.getFileName() != null) {
             switch (insidePath.getFileName().toString()) {
                 case "webfx-cli":
                     return insidePath;
