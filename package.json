@@ -14,7 +14,8 @@
         "title": "WebFX CLI",
         "commands": {"webfx": {
             "implements": ["updater"],
-            "description": "Command-line interface to webfx"
+            "description": "Command-line interface to webfx",
+            "updateTrigger": "bump"
         }},
         "platformBundlesEnabled": false,
         "downloadPage": {"platforms": ["default"]}
